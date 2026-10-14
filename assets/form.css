@@ -1,0 +1,206 @@
+/* Mismo estilo que el formulario de contacto (Contact Form 7) de macrisal.com */
+.mcamp-form {
+	max-width: 100%;
+}
+
+.mcamp-form .mcamp-hp {
+	position: absolute !important;
+	left: -9999px !important;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+}
+
+.mcamp-form .mcamp-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 0 20px;
+}
+
+.mcamp-form .mcamp-field {
+	margin-bottom: 20px;
+}
+
+.mcamp-form .mcamp-input {
+	display: block;
+	background-color: #fff !important;
+	border: 0 !important;
+	border-radius: 0 !important;
+	width: 100% !important;
+	box-sizing: border-box;
+	font-size: 14px;
+	color: #222429 !important;
+	padding: 16px !important;
+	margin: 0;
+	box-shadow: none;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+.mcamp-form .mcamp-input::placeholder {
+	color: #999;
+	opacity: 1;
+}
+
+.mcamp-form .mcamp-input:focus {
+	outline: 2px solid #ff002b;
+	outline-offset: -2px;
+}
+
+.mcamp-form .mcamp-field.has-error .mcamp-input {
+	box-shadow: inset 0 0 0 2px #dc3232;
+}
+
+.mcamp-form .mcamp-error {
+	display: block;
+	color: #dc3232;
+	font-size: 13px;
+	line-height: 1.4;
+	margin-top: 4px;
+}
+
+.mcamp-form .mcamp-error:empty {
+	display: none;
+}
+
+.mcamp-form .mcamp-field--recaptcha {
+	min-height: 78px;
+}
+
+/* Texto legal (igual que la lista numerada del formulario de contacto) */
+.mcamp-form .mcamp-legal {
+	font-size: 14px;
+	color: #222429;
+	margin: 10px 0 20px;
+}
+
+.mcamp-form .mcamp-legal ol {
+	counter-reset: list;
+	list-style: none;
+	padding-left: 0;
+	margin: 0;
+}
+
+.mcamp-form .mcamp-legal ol li {
+	margin-bottom: 10px;
+	padding-left: 22px;
+	text-indent: -22px;
+}
+
+.mcamp-form .mcamp-legal ol li::before {
+	content: counter(list) ". ";
+	counter-increment: list;
+	display: inline-block;
+	width: 22px;
+	text-indent: 0;
+	font-weight: bold;
+}
+
+.mcamp-form .mcamp-legal a,
+.mcamp-form .mcamp-check a {
+	color: #ff002b;
+	text-decoration: underline;
+}
+
+.mcamp-form .mcamp-check {
+	display: inline-flex;
+	align-items: center;
+	cursor: pointer;
+	color: #222429;
+	font-weight: normal;
+}
+
+.mcamp-form .mcamp-check input[type="checkbox"] {
+	width: 20px;
+	height: 20px;
+	margin: 0 10px 0 0;
+	flex: 0 0 auto;
+}
+
+.mcamp-form .mcamp-submit-wrap {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding-bottom: 0;
+}
+
+.mcamp-form .mcamp-submit {
+	color: #fff !important;
+	margin: 8px 0 0;
+	cursor: pointer;
+	font-size: 20px;
+	font-weight: 500;
+	border-radius: 0;
+	padding: 6px 20px;
+	line-height: 1.7em;
+	background: #ff002b;
+	border: 1px solid #ff002b;
+	-webkit-font-smoothing: antialiased;
+	transition: all 0.2s;
+}
+
+.mcamp-form .mcamp-submit:hover,
+.mcamp-form .mcamp-submit:focus {
+	background-color: #c1231e;
+	border-color: #c1231e;
+}
+
+.mcamp-form .mcamp-submit[disabled] {
+	opacity: 0.6;
+	cursor: wait;
+}
+
+.mcamp-form .mcamp-spinner {
+	display: none;
+	width: 20px;
+	height: 20px;
+	margin-top: 8px;
+	border: 3px solid #ccc;
+	border-top-color: #ff002b;
+	border-radius: 50%;
+	animation: mcamp-spin 0.8s linear infinite;
+}
+
+.mcamp-form.is-sending .mcamp-spinner {
+	display: inline-block;
+}
+
+@keyframes mcamp-spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+.mcamp-form .mcamp-response {
+	margin-top: 16px;
+	padding: 0;
+	font-size: 15px;
+}
+
+.mcamp-form .mcamp-response:not(:empty) {
+	padding: 12px 16px;
+	border: 2px solid #ffb900;
+}
+
+.mcamp-form.is-sent .mcamp-response {
+	border-color: #46b450;
+}
+
+.mcamp-form.is-invalid .mcamp-response,
+.mcamp-form.is-failed .mcamp-response {
+	border-color: #dc3232;
+}
+
+@media (max-width: 767px) {
+	.mcamp-form .mcamp-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.mcamp-form .mcamp-input {
+		font-size: 16px; /* evita el zoom automático en iOS */
+	}
+
+	.mcamp-form .mcamp-submit {
+		width: 100%;
+	}
+}
