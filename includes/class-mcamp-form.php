@@ -25,6 +25,7 @@ class MCamp_Form {
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'register_assets' ) );
 		add_filter( 'body_class', array( __CLASS__, 'body_class' ) );
 		add_action( 'wp_footer', array( __CLASS__, 'landing_footer' ), 5 );
+		add_filter( 'wpseo_breadcrumb_output', array( __CLASS__, 'breadcrumb' ) );
 	}
 
 	public static function register_assets() {
@@ -39,7 +40,7 @@ class MCamp_Form {
 	}
 
 	/**
-	 * Página con el formulario y la opción "Ocultar menú y pie" activada.
+	 * Página con el formulario y la opción "Ocultar menú, migas y pie" activada.
 	 */
 	private static function is_landing() {
 		$post = is_singular() ? get_post() : null;
@@ -47,13 +48,21 @@ class MCamp_Form {
 	}
 
 	/**
-	 * La clase mcamp-landing oculta el menú y el pie de Divi (ver form.css).
+	 * La clase mcamp-landing oculta el menú, las migas de pan y el pie de Divi (ver form.css).
 	 */
 	public static function body_class( $classes ) {
 		if ( self::is_landing() ) {
 			$classes[] = 'mcamp-landing';
 		}
 		return $classes;
+	}
+
+	/**
+	 * Sin migas de pan de Yoast en la landing (el esquema BreadcrumbList se mantiene).
+	 * La marca vacía permite ocultar también la sección de Divi que las contiene.
+	 */
+	public static function breadcrumb( $output ) {
+		return self::is_landing() ? '<span class="mcamp-breadcrumb-empty"></span>' : $output;
 	}
 
 	/**

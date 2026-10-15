@@ -1,4 +1,5 @@
-/* Landing: sin el menú de la cabecera ni el pie de Divi (Theme Builder y clásicos) */
+/* Landing: sin el menú de la cabecera, las migas de pan ni el pie de Divi (Theme Builder y clásicos) */
+.mcamp-landing .et-l--body .et_pb_section:has(.mcamp-breadcrumb-empty),
 .mcamp-landing .et-l--header .et_pb_menu,
 .mcamp-landing .et-l--header .et_pb_fullwidth_menu,
 .mcamp-landing #et-top-navigation,
