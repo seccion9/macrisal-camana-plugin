@@ -29,9 +29,115 @@
 		});
 	}
 
+	// reCAPTCHA invisible: la API de Google se carga al primer contacto con el
+	// formulario (o al enviarlo) para no ralentizar la página.
+	var apiCallbacks = null;
+
+	function loadRecaptcha(cb) {
+		if (window.grecaptcha && window.grecaptcha.ready) {
+			window.grecaptcha.ready(cb);
+			return;
+		}
+		if (apiCallbacks) {
+			apiCallbacks.push(cb);
+			return;
+		}
+		apiCallbacks = [cb];
+		window.mcampRecaptchaLoaded = function () {
+			apiCallbacks.forEach(function (fn) {
+				fn();
+			});
+			apiCallbacks = [];
+		};
+		var s = document.createElement('script');
+		s.src = 'https://www.google.com/recaptcha/api.js?hl=es&render=explicit&onload=mcampRecaptchaLoaded';
+		s.async = true;
+		s.onerror = function () {
+			apiCallbacks.forEach(function (fn) {
+				fn(new Error('recaptcha'));
+			});
+			apiCallbacks = null;
+		};
+		document.head.appendChild(s);
+	}
+
+	function initInvisible(form, box, send, fail) {
+		var widget = null;
+		var pending = false;
+
+		function render(err) {
+			if (err || widget !== null) {
+				return;
+			}
+			widget = window.grecaptcha.render(box, {
+				sitekey: box.getAttribute('data-sitekey'),
+				size: 'invisible',
+				badge: 'bottomright',
+				callback: function () {
+					if (pending) {
+						pending = false;
+						send();
+					}
+				},
+				'expired-callback': function () {
+					window.grecaptcha.reset(widget);
+				},
+				'error-callback': function () {
+					if (pending) {
+						pending = false;
+						fail('No se ha podido verificar el reCAPTCHA. Por favor, inténtalo de nuevo.');
+					}
+				}
+			});
+		}
+
+		form.addEventListener('focusin', function () {
+			loadRecaptcha(render);
+		}, { once: true });
+
+		return {
+			// Pide el token a Google (si aún no hay uno válido) y luego envía.
+			submit: function () {
+				pending = true;
+				loadRecaptcha(function (err) {
+					if (err) {
+						pending = false;
+						fail('No se ha podido cargar el reCAPTCHA. Revisa tu conexión e inténtalo de nuevo.');
+						return;
+					}
+					render();
+					if (window.grecaptcha.getResponse(widget)) {
+						pending = false;
+						send();
+					} else {
+						window.grecaptcha.execute(widget);
+					}
+				});
+			},
+			reset: function () {
+				if (widget !== null) {
+					window.grecaptcha.reset(widget);
+				}
+			}
+		};
+	}
+
 	function init(form) {
 		var button = form.querySelector('.mcamp-submit');
 		var response = form.querySelector('.mcamp-response');
+		var box = form.querySelector('.mcamp-recaptcha');
+		var invisible = box ? initInvisible(form, box, send, fail) : null;
+
+		function fail(message) {
+			form.classList.add('is-failed');
+			response.textContent = message;
+			done();
+		}
+
+		function done() {
+			form.classList.remove('is-sending');
+			button.disabled = false;
+		}
 
 		form.addEventListener('submit', function (e) {
 			e.preventDefault();
@@ -45,9 +151,18 @@
 			form.querySelector('[name="mcamp_elapsed"]').value = String(Date.now() - start);
 			form.querySelector('[name="mcamp_page"]').value = window.location.href.split('#')[0];
 
+			// Con el reCAPTCHA invisible el botón no se bloquea hasta tener el token:
+			// si Google muestra un desafío y se cierra, se puede volver a pulsar.
+			if (invisible) {
+				invisible.submit();
+			} else {
+				send();
+			}
+		});
+
+		function send() {
 			form.classList.add('is-sending');
 			button.disabled = true;
-
 			fetch(window.mcampForm.ajaxUrl, {
 				method: 'POST',
 				body: new FormData(form),
@@ -61,7 +176,9 @@
 					// El token de reCAPTCHA solo vale una vez: se pide de nuevo salvo
 					// cuando el envío se paró antes de comprobarlo (errores de campos).
 					var captchaUsed = json.success || !json.errors || !!json.errors.recaptcha || !Object.keys(json.errors).length;
-					if (captchaUsed && window.grecaptcha && form.querySelector('.g-recaptcha iframe')) {
+					if (captchaUsed && invisible) {
+						invisible.reset();
+					} else if (captchaUsed && window.grecaptcha && form.querySelector('.g-recaptcha iframe')) {
 						window.grecaptcha.reset();
 					}
 					if (json.success) {
@@ -83,11 +200,8 @@
 					form.classList.add('is-failed');
 					response.textContent = 'Hubo un error al enviar el formulario. Por favor inténtalo de nuevo más tarde.';
 				})
-				.then(function () {
-					form.classList.remove('is-sending');
-					button.disabled = false;
-				});
-		});
+				.then(done);
+		}
 	}
 
 	document.querySelectorAll('.mcamp-form').forEach(init);

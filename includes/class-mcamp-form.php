@@ -7,9 +7,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Formulario público: shortcode [macrisal_campana] y recepción del envío.
  *
  * La página se sirve desde la caché de WP-Optimize, así que el formulario no
- * usa nonces (caducarían). La protección anti-spam es el reCAPTCHA v2 de la web
- * (mismas claves que el formulario de contacto), un campo trampa, un tiempo
- * mínimo de relleno y un límite de envíos por IP y por correo.
+ * usa nonces (caducarían). La protección anti-spam es reCAPTCHA v2 (invisible si
+ * hay claves propias en los ajustes; si no, la casilla con las claves del
+ * formulario de contacto), un campo trampa, un tiempo mínimo de relleno y un
+ * límite de envíos por IP y por correo.
  */
 class MCamp_Form {
 
@@ -36,7 +37,7 @@ class MCamp_Form {
 
 		$s         = mcamp_settings();
 		$recaptcha = self::recaptcha_keys();
-		if ( $recaptcha ) {
+		if ( $recaptcha && ! $recaptcha[2] ) {
 			// Script del plugin wpcf7-recaptcha: lo carga en diferido el snippet
 			// "ReCAPTCHA - Lazy Load" y su recaptchaCallback pinta los .wpcf7-recaptcha.
 			wp_enqueue_script( 'google-recaptcha' );
@@ -80,8 +81,6 @@ class MCamp_Form {
 				<?php endforeach; ?>
 			</div>
 
-			<div class="mcamp-legal"><?php echo wp_kses_post( $s['legal_text'] ); ?></div>
-
 			<div class="mcamp-field mcamp-field--privacidad">
 				<label class="mcamp-check">
 					<input type="checkbox" name="privacidad" value="1" required aria-required="true">
@@ -90,7 +89,13 @@ class MCamp_Form {
 				<span class="mcamp-error" role="alert"></span>
 			</div>
 
-			<?php if ( $recaptcha ) : ?>
+			<?php if ( $recaptcha && $recaptcha[2] ) : ?>
+				<div class="mcamp-field mcamp-field--recaptcha-invisible">
+					<div class="mcamp-recaptcha" data-sitekey="<?php echo esc_attr( $recaptcha[0] ); ?>"></div>
+					<input type="hidden" name="recaptcha" value="">
+					<span class="mcamp-error" role="alert"></span>
+				</div>
+			<?php elseif ( $recaptcha ) : ?>
 				<div class="mcamp-field mcamp-field--recaptcha">
 					<span class="wpcf7-recaptcha g-recaptcha" data-sitekey="<?php echo esc_attr( $recaptcha[0] ); ?>"></span>
 					<input type="hidden" name="recaptcha" value="">
@@ -203,21 +208,29 @@ class MCamp_Form {
 
 		$sent = MCamp_Mailer::send_to_lead( $data );
 		MCamp_DB::mark_sent( $id, (bool) $sent );
-		MCamp_Mailer::notify_team( $data );
+		MCamp_Mailer::notify_team( $data, (bool) $sent );
 
 		wp_send_json( array( 'success' => true, 'message' => mcamp_settings()['success_msg'] ) );
 	}
 
 	/**
-	 * Claves de reCAPTCHA v2 guardadas en Contact Form 7: [clave del sitio, clave secreta].
+	 * Claves de reCAPTCHA v2: [clave del sitio, clave secreta, invisible].
+	 *
+	 * Las claves propias de los ajustes son de tipo invisible; si no hay, se usan
+	 * las de Contact Form 7 (tipo casilla "No soy un robot").
 	 */
 	public static function recaptcha_keys() {
+		$s = mcamp_settings();
+		if ( '' !== $s['recaptcha_site'] && '' !== $s['recaptcha_secret'] ) {
+			return array( $s['recaptcha_site'], $s['recaptcha_secret'], true );
+		}
+
 		$cf7 = get_option( 'wpcf7' );
 		if ( empty( $cf7['recaptcha'] ) || ! is_array( $cf7['recaptcha'] ) ) {
 			return array();
 		}
 		$site = (string) array_key_first( $cf7['recaptcha'] );
-		return array( $site, (string) $cf7['recaptcha'][ $site ] );
+		return array( $site, (string) $cf7['recaptcha'][ $site ], false );
 	}
 
 	/**

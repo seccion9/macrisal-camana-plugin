@@ -67,36 +67,10 @@
 	min-height: 78px;
 }
 
-/* Texto legal (igual que la lista numerada del formulario de contacto) */
-.mcamp-form .mcamp-legal {
-	font-size: 14px;
-	color: #222429;
-	margin: 10px 0 20px;
+.mcamp-form .mcamp-field--recaptcha-invisible {
+	margin-bottom: 0;
 }
 
-.mcamp-form .mcamp-legal ol {
-	counter-reset: list;
-	list-style: none;
-	padding-left: 0;
-	margin: 0;
-}
-
-.mcamp-form .mcamp-legal ol li {
-	margin-bottom: 10px;
-	padding-left: 22px;
-	text-indent: -22px;
-}
-
-.mcamp-form .mcamp-legal ol li::before {
-	content: counter(list) ". ";
-	counter-increment: list;
-	display: inline-block;
-	width: 22px;
-	text-indent: 0;
-	font-weight: bold;
-}
-
-.mcamp-form .mcamp-legal a,
 .mcamp-form .mcamp-check a {
 	color: #ff002b;
 	text-decoration: underline;

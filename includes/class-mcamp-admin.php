@@ -196,14 +196,23 @@ class MCamp_Admin {
 					<td><input type="text" class="large-text" id="mcamp-success" name="success_msg" value="<?php echo esc_attr( $s['success_msg'] ); ?>"></td>
 				</tr>
 				<tr>
-					<th scope="row"><label for="mcamp-legal">Texto legal</label></th>
-					<td><textarea class="large-text code" rows="9" id="mcamp-legal" name="legal_text"><?php echo esc_textarea( $s['legal_text'] ); ?></textarea>
-						<p class="description">HTML permitido. Por defecto es el mismo texto del formulario de contacto.</p></td>
-				</tr>
-				<tr>
 					<th scope="row"><label for="mcamp-notify">Avisar al equipo</label></th>
 					<td><input type="text" class="regular-text" id="mcamp-notify" name="notify_email" value="<?php echo esc_attr( $s['notify_email'] ); ?>" placeholder="marketing@macrisal.com">
-						<p class="description">Opcional. Correo(s), separados por comas, que reciben un aviso con cada inscripción. Vacío = sin aviso.</p></td>
+						<p class="description">Opcional. Correo(s), separados por comas, que reciben un aviso con los datos de cada inscripción. Vacío = sin aviso.</p></td>
+				</tr>
+			</table>
+
+			<h2>reCAPTCHA invisible</h2>
+			<table class="form-table" role="presentation">
+				<tr>
+					<th scope="row"><label for="mcamp-rc-site">Clave del sitio</label></th>
+					<td><input type="text" class="regular-text code" id="mcamp-rc-site" name="recaptcha_site" value="<?php echo esc_attr( $s['recaptcha_site'] ); ?>" autocomplete="off"></td>
+				</tr>
+				<tr>
+					<th scope="row"><label for="mcamp-rc-secret">Clave secreta</label></th>
+					<td><input type="password" class="regular-text code" id="mcamp-rc-secret" name="recaptcha_secret" value="<?php echo esc_attr( $s['recaptcha_secret'] ); ?>" autocomplete="new-password">
+						<p class="description">Claves de reCAPTCHA v2 de tipo <strong>invisible</strong> (se crean en <a href="https://www.google.com/recaptcha/admin/create" target="_blank" rel="noopener">google.com/recaptcha/admin</a> con el dominio macrisal.com).<br>
+						Mientras estén vacías, el formulario usa la casilla "No soy un robot" con las claves del formulario de contacto.</p></td>
 				</tr>
 			</table>
 
@@ -244,15 +253,16 @@ class MCamp_Admin {
 		$notify = implode( ', ', array_filter( array_map( 'trim', explode( ',', $notify ) ), 'is_email' ) );
 
 		$settings = array(
-			'pdf_id'       => $pdf_id,
-			'from_name'    => sanitize_text_field( wp_unslash( $_POST['from_name'] ?? '' ) ),
-			'from_email'   => sanitize_email( wp_unslash( $_POST['from_email'] ?? '' ) ),
-			'subject'      => sanitize_text_field( wp_unslash( $_POST['subject'] ?? '' ) ),
-			'body'         => wp_kses_post( wp_unslash( $_POST['body'] ?? '' ) ),
-			'notify_email' => $notify,
-			'success_msg'  => sanitize_text_field( wp_unslash( $_POST['success_msg'] ?? '' ) ),
-			'button_text'  => sanitize_text_field( wp_unslash( $_POST['button_text'] ?? '' ) ),
-			'legal_text'   => wp_kses_post( wp_unslash( $_POST['legal_text'] ?? '' ) ),
+			'pdf_id'           => $pdf_id,
+			'from_name'        => sanitize_text_field( wp_unslash( $_POST['from_name'] ?? '' ) ),
+			'from_email'       => sanitize_email( wp_unslash( $_POST['from_email'] ?? '' ) ),
+			'subject'          => sanitize_text_field( wp_unslash( $_POST['subject'] ?? '' ) ),
+			'body'             => wp_kses_post( wp_unslash( $_POST['body'] ?? '' ) ),
+			'notify_email'     => $notify,
+			'success_msg'      => sanitize_text_field( wp_unslash( $_POST['success_msg'] ?? '' ) ),
+			'button_text'      => sanitize_text_field( wp_unslash( $_POST['button_text'] ?? '' ) ),
+			'recaptcha_site'   => sanitize_text_field( wp_unslash( $_POST['recaptcha_site'] ?? '' ) ),
+			'recaptcha_secret' => sanitize_text_field( wp_unslash( $_POST['recaptcha_secret'] ?? '' ) ),
 		);
 
 		// Un campo vacío vuelve al valor por defecto.

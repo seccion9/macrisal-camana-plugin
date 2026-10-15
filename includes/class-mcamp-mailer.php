@@ -100,29 +100,43 @@ class MCamp_Mailer {
 	}
 
 	/**
-	 * Aviso interno al equipo (si hay un correo configurado).
+	 * Aviso interno al equipo (si hay un correo configurado) con los datos del registro.
 	 */
-	public static function notify_team( array $lead ) {
+	public static function notify_team( array $lead, $pdf_sent = true ) {
 		$settings = mcamp_settings();
 		$to       = array_filter( array_map( 'trim', explode( ',', (string) $settings['notify_email'] ) ), 'is_email' );
 		if ( ! $to ) {
-			return;
+			return false;
 		}
 
-		$lines = array(
-			'Nueva inscripción en la campaña de captación:',
-			'',
-			'Nombre: ' . $lead['nombre'],
-			'Apellidos: ' . $lead['apellidos'],
-			'Dirección: ' . $lead['direccion'],
-			'CP: ' . $lead['cp'],
-			'Correo: ' . $lead['correo'],
-			'Teléfono: ' . $lead['telefono'],
-			'',
-			'Ver todos: ' . admin_url( 'admin.php?page=macrisal-campana' ),
+		$rows = array(
+			'Fecha'       => date_i18n( 'd/m/Y H:i' ),
+			'Nombre'      => $lead['nombre'],
+			'Apellidos'   => $lead['apellidos'],
+			'Dirección'   => $lead['direccion'],
+			'CP'          => $lead['cp'],
+			'Correo'      => $lead['correo'],
+			'Teléfono'    => $lead['telefono'],
+			'PDF enviado' => $pdf_sent ? 'Sí' : 'No (se puede reenviar desde el escritorio)',
+			'Página'      => $lead['pagina'] ?? '',
 		);
 
-		wp_mail( $to, 'Nueva inscripción en la campaña - Macrisal', implode( "\n", $lines ), array( 'Reply-To: ' . $lead['correo'] ) );
+		$table = '';
+		foreach ( $rows as $label => $value ) {
+			$table .= '<tr><td style="padding:6px 16px 6px 0;color:#6b6e75;white-space:nowrap;vertical-align:top;">' . esc_html( $label ) . '</td>'
+				. '<td style="padding:6px 0;"><strong>' . esc_html( (string) $value ) . '</strong></td></tr>';
+		}
+
+		$body = '<p>Nueva inscripción en la campaña de captación:</p>'
+			. '<table role="presentation" cellpadding="0" cellspacing="0" style="font-size:15px;">' . $table . '</table>'
+			. '<p style="margin-top:24px;"><a href="' . esc_url( admin_url( 'admin.php?page=macrisal-campana' ) ) . '" style="color:#ff002b;">Ver todos los registros</a></p>';
+
+		return wp_mail(
+			$to,
+			'Nueva inscripción en la campaña: ' . trim( $lead['nombre'] . ' ' . $lead['apellidos'] ),
+			self::wrap_html( $body ),
+			array( 'Content-Type: text/html; charset=UTF-8', 'Reply-To: ' . $lead['correo'] )
+		);
 	}
 
 	private static function wrap_html( $content ) {
