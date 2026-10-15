@@ -24,6 +24,7 @@ class MCamp_Form {
 		add_action( 'wp_ajax_nopriv_mcamp_submit', array( __CLASS__, 'ajax_submit' ) );
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'register_assets' ) );
 		add_filter( 'body_class', array( __CLASS__, 'body_class' ) );
+		add_action( 'wp_footer', array( __CLASS__, 'landing_footer' ), 5 );
 	}
 
 	public static function register_assets() {
@@ -38,7 +39,7 @@ class MCamp_Form {
 	}
 
 	/**
-	 * Página con el formulario y la opción "Ocultar el menú" activada.
+	 * Página con el formulario y la opción "Ocultar menú y pie" activada.
 	 */
 	private static function is_landing() {
 		$post = is_singular() ? get_post() : null;
@@ -46,13 +47,32 @@ class MCamp_Form {
 	}
 
 	/**
-	 * La clase mcamp-landing oculta el menú de la cabecera de Divi (ver form.css).
+	 * La clase mcamp-landing oculta el menú y el pie de Divi (ver form.css).
 	 */
 	public static function body_class( $classes ) {
 		if ( self::is_landing() ) {
 			$classes[] = 'mcamp-landing';
 		}
 		return $classes;
+	}
+
+	/**
+	 * Pie mínimo de la landing: los enlaces legales que deben seguir accesibles.
+	 */
+	public static function landing_footer() {
+		if ( ! self::is_landing() ) {
+			return;
+		}
+		$links = array(
+			'/aviso-legal/'           => 'Aviso legal',
+			'/politica-de-privacidad/' => 'Política de privacidad',
+			'/politica-de-cookies-ue/' => 'Política de cookies',
+		);
+		echo '<footer class="mcamp-landing-footer"><p>&copy; ' . esc_html( gmdate( 'Y' ) ) . ' FINESTRES MACRISAL, S.L.';
+		foreach ( $links as $path => $label ) {
+			echo ' · <a href="' . esc_url( home_url( $path ) ) . '">' . esc_html( $label ) . '</a>';
+		}
+		echo '</p></footer>';
 	}
 
 	public static function shortcode() {

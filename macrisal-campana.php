@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Macrisal Campaña de captación
  * Description: Formulario de campaña ([macrisal_campana]), guarda los datos en una tabla propia, envía al usuario un correo personalizable con un PDF y muestra los registros en el escritorio.
- * Version: 1.3.0
+ * Version: 1.4.0
  * Author: Macrisal
  * Text Domain: macrisal-campana
  */
@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'MCAMP_VERSION', '1.3.0' );
+define( 'MCAMP_VERSION', '1.4.0' );
 define( 'MCAMP_DB_VERSION', '1' );
 define( 'MCAMP_DIR', plugin_dir_path( __FILE__ ) );
 define( 'MCAMP_URL', plugin_dir_url( __FILE__ ) );

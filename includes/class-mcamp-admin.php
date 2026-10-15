@@ -205,9 +205,9 @@ class MCamp_Admin {
 			<h2>Página</h2>
 			<table class="form-table" role="presentation">
 				<tr>
-					<th scope="row">Menú de la web</th>
-					<td><label><input type="checkbox" name="hide_menu" value="1" <?php checked( (int) $s['hide_menu'], 1 ); ?>> Ocultar el menú en las páginas con el formulario</label>
-						<p class="description">Se mantiene el logo de la cabecera. El resto de la web no cambia.</p></td>
+					<th scope="row">Menú y pie de la web</th>
+					<td><label><input type="checkbox" name="hide_menu" value="1" <?php checked( (int) $s['hide_menu'], 1 ); ?>> Ocultar el menú y el pie de página en las páginas con el formulario</label>
+						<p class="description">Se mantiene el logo de la cabecera y, abajo, una línea con Aviso legal, Privacidad y Cookies. El resto de la web no cambia.</p></td>
 				</tr>
 			</table>
 
