@@ -202,6 +202,15 @@ class MCamp_Admin {
 				</tr>
 			</table>
 
+			<h2>Página</h2>
+			<table class="form-table" role="presentation">
+				<tr>
+					<th scope="row">Menú de la web</th>
+					<td><label><input type="checkbox" name="hide_menu" value="1" <?php checked( (int) $s['hide_menu'], 1 ); ?>> Ocultar el menú en las páginas con el formulario</label>
+						<p class="description">Se mantiene el logo de la cabecera. El resto de la web no cambia.</p></td>
+				</tr>
+			</table>
+
 			<h2>reCAPTCHA invisible</h2>
 			<table class="form-table" role="presentation">
 				<tr>
@@ -263,6 +272,7 @@ class MCamp_Admin {
 			'button_text'      => sanitize_text_field( wp_unslash( $_POST['button_text'] ?? '' ) ),
 			'recaptcha_site'   => sanitize_text_field( wp_unslash( $_POST['recaptcha_site'] ?? '' ) ),
 			'recaptcha_secret' => sanitize_text_field( wp_unslash( $_POST['recaptcha_secret'] ?? '' ) ),
+			'hide_menu'        => empty( $_POST['hide_menu'] ) ? 0 : 1,
 		);
 
 		// Un campo vacío vuelve al valor por defecto.

@@ -1,3 +1,11 @@
+/* Landing: sin el menú de la cabecera de Divi (Theme Builder y cabecera clásica) */
+.mcamp-landing .et-l--header .et_pb_menu,
+.mcamp-landing .et-l--header .et_pb_fullwidth_menu,
+.mcamp-landing #et-top-navigation,
+.mcamp-landing #top-header {
+	display: none !important;
+}
+
 /* Mismo estilo que el formulario de contacto (Contact Form 7) de macrisal.com */
 .mcamp-form {
 	max-width: 100%;

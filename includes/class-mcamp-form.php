@@ -23,12 +23,36 @@ class MCamp_Form {
 		add_action( 'wp_ajax_mcamp_submit', array( __CLASS__, 'ajax_submit' ) );
 		add_action( 'wp_ajax_nopriv_mcamp_submit', array( __CLASS__, 'ajax_submit' ) );
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'register_assets' ) );
+		add_filter( 'body_class', array( __CLASS__, 'body_class' ) );
 	}
 
 	public static function register_assets() {
 		wp_register_style( 'mcamp-form', MCAMP_URL . 'assets/form.css', array(), MCAMP_VERSION );
 		wp_register_script( 'mcamp-form', MCAMP_URL . 'assets/form.js', array(), MCAMP_VERSION, true );
 		wp_localize_script( 'mcamp-form', 'mcampForm', array( 'ajaxUrl' => admin_url( 'admin-ajax.php' ) ) );
+
+		// En la landing el CSS va en el <head> para que el menú no llegue a verse.
+		if ( self::is_landing() ) {
+			wp_enqueue_style( 'mcamp-form' );
+		}
+	}
+
+	/**
+	 * Página con el formulario y la opción "Ocultar el menú" activada.
+	 */
+	private static function is_landing() {
+		$post = is_singular() ? get_post() : null;
+		return $post && has_shortcode( $post->post_content, 'macrisal_campana' ) && mcamp_settings()['hide_menu'];
+	}
+
+	/**
+	 * La clase mcamp-landing oculta el menú de la cabecera de Divi (ver form.css).
+	 */
+	public static function body_class( $classes ) {
+		if ( self::is_landing() ) {
+			$classes[] = 'mcamp-landing';
+		}
+		return $classes;
 	}
 
 	public static function shortcode() {
