@@ -1,11 +1,12 @@
-/* Landing: sin el menú de la cabecera, las migas de pan ni el pie de Divi (Theme Builder y clásicos) */
+/* Landing: sin el menú de la cabecera, las migas de pan, el pie de Divi ni el botón de WhatsApp */
 .mcamp-landing .et-l--body .et_pb_section:has(.mcamp-breadcrumb-empty),
 .mcamp-landing .et-l--header .et_pb_menu,
 .mcamp-landing .et-l--header .et_pb_fullwidth_menu,
 .mcamp-landing #et-top-navigation,
 .mcamp-landing #top-header,
 .mcamp-landing .et-l--footer,
-.mcamp-landing #main-footer {
+.mcamp-landing #main-footer,
+.mcamp-landing .joinchat {
 	display: none !important;
 }
 

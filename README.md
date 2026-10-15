@@ -5,7 +5,7 @@ Plugin de WordPress para macrisal.com: formulario de captación que guarda los d
 - Shortcode: `[macrisal_campana]`
 - Panel: menú **Campaña captación** (solo administradores): registros, búsqueda, reenvío, borrado y exportación CSV; pestaña **Correo y PDF** para el PDF, remitente, asunto, mensaje, aviso al equipo y claves de reCAPTCHA invisible.
 - Aviso al equipo: en *Avisar al equipo* (p. ej. marketing@macrisal.com) llega un correo con los datos de cada inscripción.
-- Landing: en las páginas con el formulario se ocultan el menú de la cabecera, las migas de pan de Yoast y el pie de Divi, con un pie mínimo de enlaces legales (opción *Página → Menú, migas y pie*).
+- Landing: en las páginas con el formulario se ocultan el menú de la cabecera, las migas de pan de Yoast, el pie de Divi y el botón de WhatsApp (Joinchat), con un pie mínimo de enlaces legales (opción *Página → Menú, migas, pie y WhatsApp*).
 - Etiquetas en asunto/mensaje: `{nombre}` `{apellidos}` `{direccion}` `{cp}` `{correo}` `{telefono}`
 - Datos en la tabla `{prefix}macrisal_campana_leads`.
 - Requiere WP Mail SMTP para el envío.

@@ -26,6 +26,7 @@ class MCamp_Form {
 		add_filter( 'body_class', array( __CLASS__, 'body_class' ) );
 		add_action( 'wp_footer', array( __CLASS__, 'landing_footer' ), 5 );
 		add_filter( 'wpseo_breadcrumb_output', array( __CLASS__, 'breadcrumb' ) );
+		add_filter( 'joinchat_show', array( __CLASS__, 'joinchat' ) );
 	}
 
 	public static function register_assets() {
@@ -40,7 +41,7 @@ class MCamp_Form {
 	}
 
 	/**
-	 * Página con el formulario y la opción "Ocultar menú, migas y pie" activada.
+	 * Página con el formulario y la opción "Ocultar menú, migas, pie y WhatsApp" activada.
 	 */
 	private static function is_landing() {
 		$post = is_singular() ? get_post() : null;
@@ -63,6 +64,13 @@ class MCamp_Form {
 	 */
 	public static function breadcrumb( $output ) {
 		return self::is_landing() ? '<span class="mcamp-breadcrumb-empty"></span>' : $output;
+	}
+
+	/**
+	 * Sin el botón de WhatsApp (plugin Joinchat) en la landing.
+	 */
+	public static function joinchat( $show ) {
+		return self::is_landing() ? false : $show;
 	}
 
 	/**

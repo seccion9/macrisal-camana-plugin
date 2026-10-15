@@ -205,8 +205,8 @@ class MCamp_Admin {
 			<h2>Página</h2>
 			<table class="form-table" role="presentation">
 				<tr>
-					<th scope="row">Menú, migas y pie</th>
-					<td><label><input type="checkbox" name="hide_menu" value="1" <?php checked( (int) $s['hide_menu'], 1 ); ?>> Ocultar el menú, las migas de pan y el pie de página en las páginas con el formulario</label>
+					<th scope="row">Menú, migas, pie y WhatsApp</th>
+					<td><label><input type="checkbox" name="hide_menu" value="1" <?php checked( (int) $s['hide_menu'], 1 ); ?>> Ocultar el menú, las migas de pan, el pie de página y el botón de WhatsApp en las páginas con el formulario</label>
 						<p class="description">Se mantiene el logo de la cabecera y, abajo, una línea con Aviso legal, Privacidad y Cookies. El resto de la web no cambia.</p></td>
 				</tr>
 			</table>
