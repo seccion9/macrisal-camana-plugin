@@ -170,6 +170,10 @@ class MCamp_Form {
 				<button type="submit" class="mcamp-submit"><?php echo esc_html( $s['button_text'] ); ?></button>
 				<span class="mcamp-spinner" aria-hidden="true"></span>
 			</p>
+			<?php if ( $recaptcha && $recaptcha[2] ) : ?>
+				<?php // Google permite ocultar el icono de reCAPTCHA (ver form.css) si se muestra este aviso. ?>
+				<p class="mcamp-recaptcha-note">Este sitio está protegido por reCAPTCHA y se aplican la <a href="https://policies.google.com/privacy?hl=es" target="_blank" rel="noopener">Política de privacidad</a> y los <a href="https://policies.google.com/terms?hl=es" target="_blank" rel="noopener">Términos del servicio</a> de Google.</p>
+			<?php endif; ?>
 			<div class="mcamp-response" role="status" aria-live="polite"></div>
 		</form>
 		<?php

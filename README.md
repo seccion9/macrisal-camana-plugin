@@ -9,6 +9,6 @@ Plugin de WordPress para macrisal.com: formulario de captación que guarda los d
 - Etiquetas en asunto/mensaje: `{nombre}` `{apellidos}` `{empresa}` `{direccion}` `{cp}` `{correo}` `{telefono}`
 - Datos en la tabla `{prefix}macrisal_campana_leads`.
 - Requiere WP Mail SMTP para el envío.
-- reCAPTCHA: con claves v2 **invisible** en los ajustes usa el reCAPTCHA invisible (se carga al tocar el formulario); sin ellas, la casilla "No soy un robot" con las claves de Contact Form 7.
+- reCAPTCHA: con claves v2 **invisible** en los ajustes usa el reCAPTCHA invisible (se carga al tocar el formulario; el icono flotante se oculta y bajo el botón aparece el aviso de Google); sin ellas, la casilla "No soy un robot" con las claves de Contact Form 7.
 
 Instalación: copiar la carpeta `macrisal-campana` en `wp-content/plugins/` y activarla.

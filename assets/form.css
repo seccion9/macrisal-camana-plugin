@@ -106,6 +106,24 @@
 	margin-bottom: 0;
 }
 
+.mcamp-form .mcamp-recaptcha-note {
+	margin: 12px 0 0;
+	padding: 0;
+	font-size: 12px;
+	line-height: 1.5;
+	color: #6b6e75;
+}
+
+.mcamp-form .mcamp-recaptcha-note a {
+	color: inherit;
+	text-decoration: underline;
+}
+
+/* Icono flotante del reCAPTCHA invisible: se sustituye por .mcamp-recaptcha-note. */
+.grecaptcha-badge {
+	visibility: hidden !important;
+}
+
 .mcamp-form .mcamp-check a {
 	color: #ff002b;
 	text-decoration: underline;
