@@ -180,7 +180,7 @@ class MCamp_Admin {
 							)
 						);
 						?>
-						<p class="description">Puedes usar estas etiquetas en el asunto y el mensaje: <code>{nombre}</code> <code>{apellidos}</code> <code>{direccion}</code> <code>{cp}</code> <code>{correo}</code> <code>{telefono}</code></p>
+						<p class="description">Puedes usar estas etiquetas en el asunto y el mensaje: <code>{nombre}</code> <code>{apellidos}</code> <code>{empresa}</code> <code>{direccion}</code> <code>{cp}</code> <code>{correo}</code> <code>{telefono}</code></p>
 					</td>
 				</tr>
 			</table>
@@ -300,6 +300,7 @@ class MCamp_Admin {
 			array(
 				'nombre'    => 'María',
 				'apellidos' => 'García López',
+				'empresa'   => 'Reformas García, S.L.',
 				'direccion' => 'C/ Ca n’Oliva, 74',
 				'cp'        => '08020',
 				'correo'    => $to,
@@ -343,12 +344,13 @@ class MCamp_Admin {
 
 		$out = fopen( 'php://output', 'w' );
 		fwrite( $out, "\xEF\xBB\xBF" ); // BOM para que Excel lea bien los acentos.
-		fputcsv( $out, array( 'Fecha', 'Nombre', 'Apellidos', 'Dirección', 'CP', 'Correo', 'Teléfono', 'Acepta privacidad', 'Correo enviado', 'Página', 'IP' ), ';' );
+		fputcsv( $out, array( 'Fecha', 'Nombre', 'Apellidos', 'Empresa', 'Dirección', 'CP', 'Correo', 'Teléfono', 'Acepta privacidad', 'Correo enviado', 'Página', 'IP' ), ';' );
 		foreach ( $rows as $r ) {
 			$line = array(
 				$r['created_at'],
 				$r['nombre'],
 				$r['apellidos'],
+				$r['empresa'],
 				$r['direccion'],
 				$r['cp'],
 				$r['correo'],
@@ -393,6 +395,7 @@ class MCamp_List_Table extends WP_List_Table {
 			'created_at'     => 'Fecha',
 			'nombre'         => 'Nombre',
 			'apellidos'      => 'Apellidos',
+			'empresa'        => 'Empresa',
 			'direccion'      => 'Dirección',
 			'cp'             => 'CP',
 			'correo'         => 'Correo',
@@ -406,6 +409,7 @@ class MCamp_List_Table extends WP_List_Table {
 			'created_at'     => array( 'created_at', true ),
 			'nombre'         => array( 'nombre', false ),
 			'apellidos'      => array( 'apellidos', false ),
+			'empresa'        => array( 'empresa', false ),
 			'cp'             => array( 'cp', false ),
 			'correo'         => array( 'correo', false ),
 			'correo_enviado' => array( 'correo_enviado', false ),

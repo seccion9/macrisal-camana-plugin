@@ -52,6 +52,10 @@
 	margin-bottom: 20px;
 }
 
+.mcamp-form .mcamp-field--empresa {
+	grid-column: 1 / -1;
+}
+
 .mcamp-form .mcamp-input {
 	display: block;
 	background-color: #fff !important;

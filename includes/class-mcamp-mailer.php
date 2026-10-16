@@ -13,7 +13,7 @@ class MCamp_Mailer {
 	 */
 	public static function replace_tags( $text, array $lead, $escape ) {
 		$tags = array();
-		foreach ( array( 'nombre', 'apellidos', 'direccion', 'cp', 'correo', 'telefono' ) as $key ) {
+		foreach ( array( 'nombre', 'apellidos', 'empresa', 'direccion', 'cp', 'correo', 'telefono' ) as $key ) {
 			$value                 = isset( $lead[ $key ] ) ? (string) $lead[ $key ] : '';
 			$tags[ '{' . $key . '}' ] = $escape ? esc_html( $value ) : $value;
 		}
@@ -113,6 +113,7 @@ class MCamp_Mailer {
 			'Fecha'       => date_i18n( 'd/m/Y H:i' ),
 			'Nombre'      => $lead['nombre'],
 			'Apellidos'   => $lead['apellidos'],
+			'Empresa'     => '' !== ( $lead['empresa'] ?? '' ) ? $lead['empresa'] : '—',
 			'Dirección'   => $lead['direccion'],
 			'CP'          => $lead['cp'],
 			'Correo'      => $lead['correo'],

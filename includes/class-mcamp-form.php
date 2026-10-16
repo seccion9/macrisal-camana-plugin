@@ -107,6 +107,7 @@ class MCamp_Form {
 		$fields = array(
 			array( 'nombre', 'Nombre *', 'text', 'given-name', 100 ),
 			array( 'apellidos', 'Apellidos *', 'text', 'family-name', 150 ),
+			array( 'empresa', 'Empresa (opcional)', 'text', 'organization', 150 ),
 			array( 'direccion', 'Dirección *', 'text', 'street-address', 255 ),
 			array( 'cp', 'Código postal *', 'text', 'postal-code', 5 ),
 			array( 'correo', 'Correo electrónico *', 'email', 'email', 190 ),
@@ -125,8 +126,9 @@ class MCamp_Form {
 
 			<div class="mcamp-grid">
 				<?php foreach ( $fields as $f ) : ?>
+					<?php $required = '*' === substr( $f[1], -1 ); ?>
 					<div class="mcamp-field mcamp-field--<?php echo esc_attr( $f[0] ); ?>">
-						<label class="screen-reader-text" for="mcamp-<?php echo esc_attr( $f[0] ); ?>"><?php echo esc_html( rtrim( $f[1], ' *' ) ); ?></label>
+						<label class="screen-reader-text" for="mcamp-<?php echo esc_attr( $f[0] ); ?>"><?php echo esc_html( preg_replace( '/ (\*|\(opcional\))$/', '', $f[1] ) ); ?></label>
 						<input
 							id="mcamp-<?php echo esc_attr( $f[0] ); ?>"
 							class="mcamp-input"
@@ -136,7 +138,7 @@ class MCamp_Form {
 							autocomplete="<?php echo esc_attr( $f[3] ); ?>"
 							maxlength="<?php echo (int) $f[4]; ?>"
 							<?php echo 'cp' === $f[0] ? 'inputmode="numeric" pattern="[0-9]{5}"' : ''; ?>
-							required aria-required="true">
+							<?php echo $required ? 'required aria-required="true"' : ''; ?>>
 						<span class="mcamp-error" role="alert"></span>
 					</div>
 				<?php endforeach; ?>
@@ -185,6 +187,7 @@ class MCamp_Form {
 		$data = array(
 			'nombre'    => $get( 'nombre' ),
 			'apellidos' => $get( 'apellidos' ),
+			'empresa'   => $get( 'empresa' ),
 			'direccion' => $get( 'direccion' ),
 			'cp'        => preg_replace( '/\s+/', '', $get( 'cp' ) ),
 			'correo'    => $get( 'correo' ),
@@ -200,6 +203,10 @@ class MCamp_Form {
 			} elseif ( mb_strlen( $data[ $key ] ) > $max ) {
 				$errors[ $key ] = 'El texto es demasiado largo.';
 			}
+		}
+
+		if ( mb_strlen( $data['empresa'] ) > 150 ) {
+			$errors['empresa'] = 'El texto es demasiado largo.';
 		}
 
 		if ( '' === $data['cp'] ) {

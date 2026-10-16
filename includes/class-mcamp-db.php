@@ -25,6 +25,7 @@ class MCamp_DB {
 			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 			nombre varchar(100) NOT NULL DEFAULT '',
 			apellidos varchar(150) NOT NULL DEFAULT '',
+			empresa varchar(150) NOT NULL DEFAULT '',
 			direccion varchar(255) NOT NULL DEFAULT '',
 			cp varchar(10) NOT NULL DEFAULT '',
 			correo varchar(190) NOT NULL DEFAULT '',
@@ -57,6 +58,7 @@ class MCamp_DB {
 			array(
 				'nombre'            => $data['nombre'],
 				'apellidos'         => $data['apellidos'],
+				'empresa'           => $data['empresa'],
 				'direccion'         => $data['direccion'],
 				'cp'                => $data['cp'],
 				'correo'            => $data['correo'],
@@ -67,7 +69,7 @@ class MCamp_DB {
 				'correo_enviado'    => 0,
 				'created_at'        => current_time( 'mysql' ),
 			),
-			array( '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%s', '%d', '%s' )
+			array( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%s', '%d', '%s' )
 		);
 
 		return $ok ? (int) $wpdb->insert_id : 0;
@@ -110,7 +112,7 @@ class MCamp_DB {
 			)
 		);
 
-		$allowed = array( 'id', 'nombre', 'apellidos', 'cp', 'correo', 'created_at', 'correo_enviado' );
+		$allowed = array( 'id', 'nombre', 'apellidos', 'empresa', 'cp', 'correo', 'created_at', 'correo_enviado' );
 		$orderby = in_array( $args['orderby'], $allowed, true ) ? $args['orderby'] : 'created_at';
 		$order   = 'ASC' === strtoupper( $args['order'] ) ? 'ASC' : 'DESC';
 
@@ -118,8 +120,8 @@ class MCamp_DB {
 		$params = array();
 		if ( '' !== $args['search'] ) {
 			$like   = '%' . $wpdb->esc_like( $args['search'] ) . '%';
-			$where .= ' AND (nombre LIKE %s OR apellidos LIKE %s OR direccion LIKE %s OR cp LIKE %s OR correo LIKE %s OR telefono LIKE %s)';
-			$params = array_fill( 0, 6, $like );
+			$where .= ' AND (nombre LIKE %s OR apellidos LIKE %s OR empresa LIKE %s OR direccion LIKE %s OR cp LIKE %s OR correo LIKE %s OR telefono LIKE %s)';
+			$params = array_fill( 0, 7, $like );
 		}
 
 		$table = self::table();
